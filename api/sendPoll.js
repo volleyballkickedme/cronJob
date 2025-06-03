@@ -2,7 +2,7 @@ import TelegramBot from 'node-telegram-bot-api';
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token, { polling: false });
 
 function getThisWeekDates() {
     const result = [];
@@ -46,6 +46,10 @@ function getNextWeekDates() {
 }
 
 export default async function handler(req, res) {
+    if (req.method !== "POST") {
+        return res.status(403).send("Forbidden");
+    }
+    
     const question = "No meals for me on";
     const meals = ["Lunch", "Dinner"]
     const today = new Date().getDay();
