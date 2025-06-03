@@ -40,6 +40,12 @@ export default async function handler(req, res) {
     }   
 }
 
+const token = process.env.TELEGRAM_BOT_TOKEN;
+const chatId = process.env.TELEGRAM_CHAT_ID;
+
+const bot = new TelegramBot(token, { polling: false });
+const me = await bot.getMe();
+console.log(me.username)
 // Command to manually trigger poll
 bot.onText(/\/poll/, async () => {
     const question = "No meals for me on";
