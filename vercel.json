@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/sendPoll.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/sendPoll",
+      "schedule": "0 12 * * 0"
+    }
+  ]
+}
