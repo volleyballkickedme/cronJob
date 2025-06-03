@@ -1,8 +1,11 @@
+import 'dotenv/config';
 import TelegramBot from 'node-telegram-bot-api';
 
+// Read from your .env file
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
-const bot = new TelegramBot(token, { polling: true });
+
+const bot = new TelegramBot(token, { polling: false });
 
 function getNextWeekDates() {
     const result = [];
@@ -25,9 +28,10 @@ function getNextWeekDates() {
     return result;
 }
 
-export default async function handler(req, res) {
+
+async function sendPolls() {
     const question = "No meals for me on";
-    const meals = ["Lunch", "Dinner"]
+    const meals = ["Lunch", "Dinner"];
     const nextWeekDates = getNextWeekDates();
     const weekDays = nextWeekDates.slice(0, 5);
     const weekEnds = nextWeekDates.slice(5, 7);
@@ -42,7 +46,6 @@ export default async function handler(req, res) {
         `${date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} ${meals[1]}`
     ]));
 
-    // Send poll for weekday options
     try {
         await Promise.all([
             bot.sendPoll(chatId, question, displayWeekDays, {
@@ -54,11 +57,11 @@ export default async function handler(req, res) {
                 allows_multiple_answers: true
             })
         ]);
-
-        res.status(200).send("Poll sent!");
-
+        console.log("✅ Polls sent successfully.");
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Failed to send poll.");
-    }   
+        console.error("❌ Failed to send poll:", error);
+    }
 }
+
+// Run it
+sendPolls();
