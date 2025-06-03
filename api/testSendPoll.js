@@ -85,4 +85,4 @@ async function sendPolls() {
 }
 
 // Run it
-sendPolls();
+// sendPolls();
