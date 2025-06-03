@@ -46,10 +46,6 @@ function getNextWeekDates() {
 }
 
 export default async function handler(req, res) {
-    if (req.method !== "POST") {
-        return res.status(403).send("Forbidden");
-    }
-    
     const question = "No meals for me on";
     const meals = ["Lunch", "Dinner"]
     const today = new Date().getDay();
