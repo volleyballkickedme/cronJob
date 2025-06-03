@@ -7,26 +7,26 @@ const chatId = process.env.TELEGRAM_CHAT_ID;
 
 const bot = new TelegramBot(token, { polling: false });
 
-// function getNextWeekDates() {
-//     const result = [];
-//     const curr = new Date();
+function getNextWeekDates() {
+    const result = [];
+    const curr = new Date();
 
-//     // Find next Monday
-//     const day = curr.getDay();
+    // Find next Monday
+    const day = curr.getDay();
 
-//     // Days to add to get to next Monday
-//     const daysToNextMonday = ((8 - day) % 7) || 7;
-//     let nextMonday = new Date(curr);
-//     nextMonday.setDate(curr.getDate() + daysToNextMonday);
+    // Days to add to get to next Monday
+    const daysToNextMonday = ((8 - day) % 7) || 7;
+    let nextMonday = new Date(curr);
+    nextMonday.setDate(curr.getDate() + daysToNextMonday);
 
-//     // Collect dates for next week (Monday to Sunday)
-//     for (let i = 0; i < 7; i++) {
-//         const d = new Date(nextMonday);
-//         d.setDate(nextMonday.getDate() + i);
-//         result.push(d);
-//     }
-//     return result;
-// }
+    // Collect dates for next week (Monday to Sunday)
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(nextMonday);
+        d.setDate(nextMonday.getDate() + i);
+        result.push(d);
+    }
+    return result;
+}
 
 function getThisWeekDates() {
     const result = [];
@@ -52,7 +52,8 @@ function getThisWeekDates() {
 async function sendPolls() {
     const question = "No meals for me on";
     const meals = ["Lunch", "Dinner"];
-    const nextWeekDates = getThisWeekDates();
+    const today = new Date().getDay();
+    const nextWeekDates = today > 0 ? getThisWeekDates() : getNextWeekDates();
     const weekDays = nextWeekDates.slice(0, 5);
     const weekEnds = nextWeekDates.slice(5, 7);
 
@@ -84,4 +85,4 @@ async function sendPolls() {
 }
 
 // Run it
-// sendPolls();
+sendPolls();

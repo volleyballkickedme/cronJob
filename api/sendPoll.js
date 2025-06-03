@@ -11,7 +11,7 @@ function getThisWeekDates() {
     // Find this week's Monday
     const day = curr.getDay();
     const diffToMonday = (day === 0 ? -6 : 1 - day); // Sunday (0) -> last Monday
-    
+
     let thisMonday = new Date(curr);
     thisMonday.setDate(curr.getDate() + diffToMonday);
 
@@ -24,10 +24,32 @@ function getThisWeekDates() {
     return result;
 }
 
+function getNextWeekDates() {
+    const result = [];
+    const curr = new Date();
+
+    // Find next Monday
+    const day = curr.getDay();
+
+    // Days to add to get to next Monday
+    const daysToNextMonday = ((8 - day) % 7) || 7;
+    let nextMonday = new Date(curr);
+    nextMonday.setDate(curr.getDate() + daysToNextMonday);
+
+    // Collect dates for next week (Monday to Sunday)
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(nextMonday);
+        d.setDate(nextMonday.getDate() + i);
+        result.push(d);
+    }
+    return result;
+}
+
 export default async function handler(req, res) {
     const question = "No meals for me on";
     const meals = ["Lunch", "Dinner"]
-    const nextWeekDates = getThisWeekDates();
+    const today = new Date().getDay();
+    const nextWeekDates = today > 0 ? getThisWeekDates() : getNextWeekDates();
     const weekDays = nextWeekDates.slice(0, 5);
     const weekEnds = nextWeekDates.slice(5, 7);
 
