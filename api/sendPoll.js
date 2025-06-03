@@ -4,22 +4,21 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
 const bot = new TelegramBot(token, { polling: true });
 
-function getNextWeekDates() {
+function getThisWeekDates() {
     const result = [];
     const curr = new Date();
 
-    // Find next Monday
+    // Find this week's Monday
     const day = curr.getDay();
+    const diffToMonday = (day === 0 ? -6 : 1 - day); // Sunday (0) -> last Monday
+    
+    let thisMonday = new Date(curr);
+    thisMonday.setDate(curr.getDate() + diffToMonday);
 
-    // Days to add to get to next Monday
-    const daysToNextMonday = ((8 - day) % 7) || 7;
-    let nextMonday = new Date(curr);
-    nextMonday.setDate(curr.getDate() + daysToNextMonday);
-
-    // Collect dates for next week (Monday to Sunday)
+    // Collect dates for this week (Monday to Sunday)
     for (let i = 0; i < 7; i++) {
-        const d = new Date(nextMonday);
-        d.setDate(nextMonday.getDate() + i);
+        const d = new Date(thisMonday);
+        d.setDate(thisMonday.getDate() + i);
         result.push(d);
     }
     return result;
@@ -28,7 +27,7 @@ function getNextWeekDates() {
 export default async function handler(req, res) {
     const question = "No meals for me on";
     const meals = ["Lunch", "Dinner"]
-    const nextWeekDates = getNextWeekDates();
+    const nextWeekDates = getThisWeekDates();
     const weekDays = nextWeekDates.slice(0, 5);
     const weekEnds = nextWeekDates.slice(5, 7);
 
