@@ -2,7 +2,7 @@
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "functions": {
         "api/sendPoll.js": {
-            "runtime": "nodejs"
+            "runtime": "vercel-node@1.0.0"
         }
     },
     "crons": [
