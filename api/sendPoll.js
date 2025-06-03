@@ -4,28 +4,52 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
 const bot = new TelegramBot(token, { polling: true });
 
+function getNextWeekDates() {
+    const result = [];
+    const curr = new Date();
+
+    // Find next Monday
+    const day = curr.getDay();
+
+    // Days to add to get to next Monday
+    const daysToNextMonday = ((8 - day) % 7) || 7;
+    let nextMonday = new Date(curr);
+    nextMonday.setDate(curr.getDate() + daysToNextMonday);
+
+    // Collect dates for next week (Monday to Sunday)
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(nextMonday);
+        d.setDate(nextMonday.getDate() + i);
+        result.push(d);
+    }
+    return result;
+}
+
 export default async function handler(req, res) {
     const question = "No meals for me on";
-    const weekdays = [
-        "Monday Lunch", "Monday Dinner",
-        "Tuesday Lunch", "Tuesday Dinner",
-        "Wednesday Lunch", "Wednesday Dinner",
-        "Thursday Lunch", "Thursday Dinner",
-        "Friday Lunch", "Friday Dinner",
-    ];
-    const weekends = [
-        "Saturday Lunch", "Saturday Dinner",
-        "Sunday Lunch", "Sunday Dinner"
-    ];
+    const meals = ["Lunch", "Dinner"]
+    const nextWeekDates = getNextWeekDates();
+    const weekDays = nextWeekDates.slice(0, 5);
+    const weekEnds = nextWeekDates.slice(5, 7);
+
+    const displayWeekDays = weekDays.flatMap((date) => ([
+        date.toDateString() + " " + meals[0], 
+        date.toDateString() + " " + meals[1]
+    ]));
+
+    const displayWeekEnds = weekEnds.flatMap((date) => ([
+        date.toDateString() + " " + meals[0],
+        date.toDateString() + " " + meals[1]
+    ]));
 
     // Send poll for weekday options
     try {
         await Promise.all([
-            bot.sendPoll(chatId, question, weekdays, {
+            bot.sendPoll(chatId, question, displayWeekDays, {
                 is_anonymous: false,
                 allows_multiple_answers: true
             }),
-            bot.sendPoll(chatId, question, weekends, {
+            bot.sendPoll(chatId, question, displayWeekEnds, {
                 is_anonymous: false,
                 allows_multiple_answers: true
             })
