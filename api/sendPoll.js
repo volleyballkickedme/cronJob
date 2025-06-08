@@ -50,18 +50,22 @@ export default async function handler(req, res) {
     const meals = ["Lunch", "Dinner"]
     const today = new Date().getDay();
     const nextWeekDates = today > 0 ? getThisWeekDates() : getNextWeekDates();
-    const weekDays = nextWeekDates.slice(0, 5);
-    const weekEnds = nextWeekDates.slice(5, 7);
+    const weekDays = nextWeekDates.slice(0, 4);
+    const weekEnds = nextWeekDates.slice(4, 7);
 
     const displayWeekDays = weekDays.flatMap((date) => ([
         `${date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} ${meals[0]}`,
         `${date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} ${meals[1]}`
     ]));
 
+    displayWeekDays.push("For Viewing");
+
     const displayWeekEnds = weekEnds.flatMap((date) => ([
         `${date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} ${meals[0]}`,
         `${date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} ${meals[1]}`
     ]));
+
+    displayWeekEnds.push("For Viewing");
 
     // Send poll for weekday options
     try {
