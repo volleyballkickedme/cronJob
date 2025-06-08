@@ -69,17 +69,14 @@ export default async function handler(req, res) {
 
     // Send poll for weekday options
     try {
-        await Promise.all([
-            bot.sendPoll(chatId, question, displayWeekDays, {
+        await bot.sendPoll(chatId, question, displayWeekDays, {
                 is_anonymous: false,
                 allows_multiple_answers: true
-            }),
-            bot.sendPoll(chatId, question, displayWeekEnds, {
+        });
+        await bot.sendPoll(chatId, question, displayWeekEnds, {
                 is_anonymous: false,
                 allows_multiple_answers: true
-            })
-        ]);
-
+        });
         res.status(200).send("Poll sent!");
 
     } catch (error) {
