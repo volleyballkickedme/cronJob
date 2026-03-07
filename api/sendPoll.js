@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     const question = "No meals for me on";
     const meals = ["Lunch", "Dinner"]
     const today = new Date().getDay();
-    const nextWeekDates = today > 0 and today < 6 ? getThisWeekDates() : getNextWeekDates(); // weekends trigger for the following week
+    const nextWeekDates = today > 0 && today < 6 ? getThisWeekDates() : getNextWeekDates(); // weekends trigger for the following week
     const weekDays = nextWeekDates.slice(0, 4);
     const weekEnds = nextWeekDates.slice(4, 7);
 
